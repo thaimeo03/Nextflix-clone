@@ -19,7 +19,7 @@ export default function Input({ id, onChange, value, label, type }: Props) {
             />
             <label
                 htmlFor={id}
-                className="absolute text-zinc-400 duration-150 transform scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
+                className="absolute text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3"
             >
                 {label}
             </label>

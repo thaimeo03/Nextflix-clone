@@ -2,8 +2,14 @@
 /* eslint-disable @next/next/no-img-element */
 import { useCallback, useState } from "react";
 import Input from "./components/Input";
+import axios from "axios";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 export default function Auth() {
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -13,6 +19,33 @@ export default function Auth() {
     const toggleVariant = useCallback(() => {
         setVariant((currentVariant) => (currentVariant === "login" ? "register" : "login"));
     }, []);
+
+    const handleLogin = useCallback(async () => {
+        try {
+            const res = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+            if (res?.status === 401) throw new Error(res.error);
+            else router.push("/");
+        } catch (error) {
+            console.log(error);
+        }
+    }, [email, password, router]);
+
+    const handleRegister = useCallback(async () => {
+        try {
+            await axios.post("/api/auth/register", {
+                email,
+                username,
+                password,
+            });
+            handleLogin();
+        } catch (error) {
+            console.log(error);
+        }
+    }, [email, handleLogin, password, username]);
 
     return (
         <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
@@ -51,9 +84,27 @@ export default function Auth() {
                                 value={password}
                             />
                         </div>
-                        <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+                        <button
+                            className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition"
+                            onClick={variant === "login" ? handleLogin : handleRegister}
+                        >
                             {variant === "login" ? "Login" : "Register"}
                         </button>
+                        <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+                            <div
+                                className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
+                                onClick={() => signIn("google", { callbackUrl: "/" })}
+                            >
+                                <FcGoogle size={30} />
+                            </div>
+
+                            <div
+                                className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition"
+                                onClick={() => signIn("github", { callbackUrl: "/" })}
+                            >
+                                <FaGithub size={30} />
+                            </div>
+                        </div>
                         <p className="text-neutral-500 mt-12">
                             {variant === "login"
                                 ? "First time using Netflix?"
