@@ -36,7 +36,7 @@ export default function Auth() {
 
     const handleRegister = useCallback(async () => {
         try {
-            await axios.post("/api/auth/register", {
+            await axios.post("/api/register", {
                 email,
                 username,
                 password,
@@ -46,7 +46,6 @@ export default function Auth() {
             console.log(error);
         }
     }, [email, handleLogin, password, username]);
-
     return (
         <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-cover">
             <div className="bg-black w-full h-full lg:bg-opacity-50">

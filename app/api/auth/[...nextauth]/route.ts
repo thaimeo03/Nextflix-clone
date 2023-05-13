@@ -1,16 +1,16 @@
-import NextAuth from "next-auth/next";
-import Credentials from "next-auth/providers/credentials";
-import { compare } from "bcrypt";
-import GitHubProvider from "next-auth/providers/github";
+import NextAuth, { AuthOptions } from "next-auth";
+import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { compare } from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
     providers: [
-        GitHubProvider({
+        GithubProvider({
             clientId: process.env.GITHUB_ID || "",
             clientSecret: process.env.GITHUB_SECRET || "",
         }),
@@ -28,11 +28,11 @@ export default NextAuth({
                 },
                 password: {
                     label: "Password",
-                    type: "password",
+                    type: "passord",
                 },
             },
             async authorize(credentials) {
-                if (!credentials?.email || !credentials.password) {
+                if (!credentials?.email || !credentials?.password) {
                     throw new Error("Email and password required");
                 }
 
@@ -61,11 +61,13 @@ export default NextAuth({
     },
     debug: process.env.NODE_ENV === "development",
     adapter: PrismaAdapter(prisma),
-    session: {
-        strategy: "jwt",
-    },
+    session: { strategy: "jwt" },
     jwt: {
         secret: process.env.NEXTAUTH_JWT_SECRET,
     },
     secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
