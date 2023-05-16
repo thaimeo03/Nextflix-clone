@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Navbar from "./components/Navbar";
 import Billboard from "./components/Billboard";
 import RenderMovieList from "./components/RenderMovieList";
+import InfoModal from "./components/InfoModal";
 
 export default async function Home() {
     const session = await getServerSession(authOptions);
@@ -14,6 +15,7 @@ export default async function Home() {
 
     return (
         <main>
+            {/* <InfoModal visible onClose={() => {}} /> */}
             <Navbar />
             <Billboard />
             <div className="pb-40">
