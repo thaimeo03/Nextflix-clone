@@ -1,6 +1,6 @@
 "use client";
 import { isEmpty } from "lodash";
-import useMovieList from "../hooks/useMovieList";
+
 import MovieCard from "./MovieCard";
 
 export interface movie {
@@ -13,8 +13,12 @@ export interface movie {
     duration: string;
 }
 
-export default function MovieList() {
-    const { data: movies }: { data: movie[] } = useMovieList();
+interface Props {
+    movies: movie[];
+    title: string;
+}
+
+export default function MovieList({ movies, title }: Props) {
     if (isEmpty(movies)) {
         return null;
     }
@@ -22,7 +26,7 @@ export default function MovieList() {
     return (
         <div className="px-4 md:px-12 mt-4 space-y-8">
             <div>
-                <p className="text-white md:text-xl lg:text-2xl font-semibold mb-4">Trending now</p>
+                <p className="text-white md:text-xl lg:text-2xl font-semibold mb-4">{title}</p>
                 <div className="grid grid-cols-4 gap-2">
                     {movies.map((movie) => (
                         <MovieCard key={movie.id} data={movie} />

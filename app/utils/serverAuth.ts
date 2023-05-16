@@ -1,12 +1,11 @@
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { PrismaClient } from "@prisma/client";
-import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 
 const prisma = new PrismaClient();
 
-export default async function serverAuth(req: NextApiRequest, res: NextApiResponse) {
-    const session = await getServerSession(req, res, authOptions);
+export default async function serverAuth() {
+    const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
         throw new Error("Not signed in");
